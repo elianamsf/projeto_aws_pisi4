@@ -1,8 +1,3 @@
-"""
-
-aws emr add-steps --cluster-id j-23EEAM3NN5CQN --steps Type=Spark,Name="Kinesis-SQL",ActionOnFailure=CONTINUE,Args=[--jars,s3://sparkkinesis/spark-sql-kinesis_2.11-1.2.1_spark-2.4-SNAPSHOT.jar,s3://sparkkinesis/kinesis_example.py,kinesis-sql,pyspark-kinesis,https://kinesis.us-east-1.amazonaws.com,us-east-1]
-
-"""
 import sys
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col
@@ -48,7 +43,6 @@ if __name__ == "__main__":
             print('Failed to send data.')
 
     def process(row):
-        #print("Oie! :D")
         data = row.asDict()
         t = data["TEM_INS"]
         u = data["UMD_INS"]
@@ -79,7 +73,6 @@ if __name__ == "__main__":
                     else:
                         hi = hi_pre_two
         tempc = (hi - 32)/1.8
-        #print(tempc)
         nivel_alerta = ''
         if tempc <= 27.0:
             nivel_alerta = 'Normal'
@@ -96,10 +89,6 @@ if __name__ == "__main__":
         cod_str = str(cod)
         data = {'temperatura':hi_str,'nivel_alerta': nivel_alerta_str, 'cod_estacao': cod_str}
         send_data_to_tb(data) 
-
-        #clientSQS = boto3.client('sqs', region_name='us-east-1')
-        #url = "https://sqs.us-east-1.amazonaws.com/589020551826/fila-sqs-inmet"
-        #clientSQS.send_message(QueueUrl=url, MessageBody=str(row))
 
     kinesis\
         .selectExpr('CAST(data AS STRING)')\
