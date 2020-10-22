@@ -32,18 +32,18 @@ def send_to_kinesis(client, data):
         CD_ESTACAO = element['CD_ESTACAO']
         TEM_INS = element['TEM_INS']
         UMD_INS = element['UMD_INS']
-        if TEM_INS is not None:
+        if TEM_INS is not None and UMD_INS is not None:
             TEM_INS = 1.8* float(TEM_INS) + 32
-        dic['TEM_INS'] = TEM_INS
-        dic['UMD_INS'] = UMD_INS
-        dic['CD_ESTACAO'] = CD_ESTACAO
-        dic = json.dumps(dic)
-        record = bytes(dic,'utf-8')
-        response = {
-            'Data':record,
-            'PartitionKey':key
-        }
-        send.append(response)
+            dic['TEM_INS'] = TEM_INS
+            dic['UMD_INS'] = UMD_INS
+            dic['CD_ESTACAO'] = CD_ESTACAO
+            dic = json.dumps(dic)
+            record = bytes(dic,'utf-8')
+            response = {
+                'Data':record,
+                'PartitionKey':key
+            }
+            send.append(response)
     result =  client.put_records(StreamName=inputStream, Records=send)
     return result
     
